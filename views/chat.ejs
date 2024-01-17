@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+    <h1>Chat</h1>
+
+<ul id="chat-messages">
+  <% chatData.forEach(chatMessage => { %>
+    <li><%= chatMessage.text %></li>
+  <% }) %>
+</ul>
+
+    
+<input type="text" id="data" name="data">
+<button onclick="addData()">Add Data</button>
+<script>
+    function addData() {
+  const data = document.getElementById('data').value;
+
+  // Validate data (optional, but recommended)
+  // ...
+
+  fetch('/addData', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ data })
+  })
+  .then(() => {
+    // Handle successful data addition
+    document.getElementById('data').value = '';
+    console.log('Data added successfully!');
+  })
+  .catch(error => {
+    console.error(error);
+    console.log('Failed to add data!');
+  });
+}
+window.addEventListener('keydown', function (e) {
+  if (e.key === 'Enter') {
+    addData();
+  }
+}, false);
+</script>
+</body>
+</html>
