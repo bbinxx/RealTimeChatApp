@@ -1,5 +1,14 @@
-# Created by https://www.toptal.com/developers/gitignore/api/node
-# Edit at https://www.toptal.com/developers/gitignore?templates=node
+# Created by https://www.toptal.com/developers/gitignore/api/node,firebase
+# Edit at https://www.toptal.com/developers/gitignore?templates=node,firebase
+
+### Firebase ###
+.idea
+**/node_modules/*
+**/.firebaserc
+
+### Firebase Patch ###
+.runtimeconfig.json
+.firebase/
 
 ### Node ###
 # Logs
@@ -141,6 +150,4 @@ dist
 # SvelteKit build / generate output
 .svelte-kit
 
-# End of https://www.toptal.com/developers/gitignore/api/node
-Hyper
-*.json
+# End of https://www.toptal.com/developers/gitignore/api/node,firebase
