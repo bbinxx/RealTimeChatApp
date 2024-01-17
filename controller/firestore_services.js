@@ -1,7 +1,7 @@
 // firestore_service.js
 
 const { getFirestore, collection, addDoc, getDocs, updateDoc, deleteDoc, onSnapshot } = require("firebase/firestore");
-
+const firebaseConfig = require('../firebase_config');
 const db = getFirestore();
 
 exports.addData = async (collectionName, data) => {
