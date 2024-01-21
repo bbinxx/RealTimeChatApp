@@ -2,17 +2,34 @@
 <html>
 <head>
  <title><%= title %></title>
+ <style>
+   .form_container {
+      background-color: aqua;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      top:0;
+      
+      left:0;
+      right:0;
+      position: absolute;
+   }
+  
+ </style>
 </head>
 <body>
- <h1>Login</h1>
+
+ <div class="form_container">
+   <h1>Login</h1>
  <form action="/login" method="post">
-    <label for="email">Email:</label>
-    <input type="email" id="email" name="email" required />
+
+    <input type="email" id="email" name="email" placeholder="Email" />
     <br />
-    <label for="pwd">Password:</label>
-    <input type="password" id="pwd" name="pwd" required />
+   
+    <input type="password" id="pwd" name="pwd" required placeholder="Password"/>
     <br />
     <button type="submit">Login</button>
  </form>
+</div>
 </body>
 </html>
