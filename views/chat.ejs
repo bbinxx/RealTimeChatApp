@@ -1,52 +1,77 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Chat-io</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
 </head>
+<style>
+    #chat {
+        max-height: 500px;
+        min-height: 500px;
+        background-color: aliceblue;
+        overflow-y: scroll;
+    }
+</style>
+
+
 <body>
+    <%=user.user.providerData[0].displayName%>
+    <section class="container">
+        
 
-    <h1>Chat</h1>
+        <div id="chat">
 
-<ul id="chat-messages">
-  <% chatData.forEach(chatMessage => { %>
-    <li><%= chatMessage.text %></li>
-  <% }) %>
-</ul>
+        </div>
+        <br>
+        <input type="text" id="msg" class="form-control"  placeholder="Message" required>
 
-    
-<input type="text" id="data" name="data">
-<button onclick="addData()">Add Data</button>
+        <button class="btn btn-primary btn-lg btn-block" onclick="send()">send</button>
+    </section>
+</body>
+<script src="https://cdn.socket.io/4.7.4/socket.io.min.js" integrity="sha384-Gr6Lu2Ajx28mzwyVR8CFkULdCU7kMlZ9UthllibdOSo6qAiN+yXNHqtgdTvFXMT4" crossorigin="anonymous"></script>
 <script>
-    function addData() {
-  const data = document.getElementById('data').value;
+    var socket = io();
+    socket.on('disconnect', () => {
+       // console.log("Disconnected");
+    });
 
-  // Validate data (optional, but recommended)
-  // ...
+    socket.on('showmsg', (data) => {
+        //console.log(data);
+        var chat = document.getElementById("chat");
+        var p = document.createElement('p');
+        let displayName = "<%=user.user.providerData[0].displayName%>";
+        let uid = "<%=user.user.uid%>";
+        console.log(displayName);
+        console.log(uid);
 
-  fetch('/addData', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ data })
-  })
-  .then(() => {
-    // Handle successful data addition
-    document.getElementById('data').value = '';
-    console.log('Data added successfully!');
-  })
-  .catch(error => {
-    console.error(error);
-    console.log('Failed to add data!');
-  });
-}
-window.addEventListener('keydown', function (e) {
+
+        p.innerHTML = data.userName + ": " + data.data;
+        chat.append(p);
+        chat.scrollTop = p.offsetHeight + p.offsetTop;
+    });
+
+    function send() {
+        var msgField = document.getElementById("msg");
+        //var usernameField = document.getElementById("username");
+
+        var msg = msgField.value;
+        //var username = usernameField.value;
+
+        socket.emit('msg', { msg: msg });
+        msgField.value = '';
+
+    }
+
+    window.addEventListener('keydown', function (e) {
   if (e.key === 'Enter') {
-    addData();
+    send();
   }
 }, false);
+    
 </script>
-</body>
+
 </html>
