@@ -1,10 +1,14 @@
 // app.js
 const express = require("express");
 const bodyParser = require("body-parser");
-const userService = require("./controller/user_service");
-const firestoreService = require("./controller/firestore_services");
-
+const userService = require("./models/user_service");
+const firestoreService = require("./models/firestore_services");
+const {handleSocketConnections,fdata} = require('./controller/chatController');
+const http = require("http");
 const app = express();
+const server = http.createServer(app);
+const io = require('socket.io')(server, { allowEIO3: true });
+const profileRoute = require('./routes/profileRoute');
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -12,23 +16,25 @@ app.use(bodyParser.json());
 app.set('view engine', 'ejs');
 app.set('views', __dirname + '/views');
 
-app.post('/addData', async (request, response) => {
+//handleSocketConnections(io);
+fdata(io);
+
+app.use('/profile',profileRoute);
+
+app.get("/profile/rawData", async (request, response) => {
+  if (!userService.currentUser) {
+    return response.redirect("/");
+  }
+
   try {
-    if(userService.currentUser){
-      const data = await request.body.data; // Parse JSON data
-
-      const result = await firestoreService.addData('chatData', { text: data });
-      response.json({ message: 'Data added successfully' });
-    }else{
-      response.redirect('/');
-    }
-
+    const user =userService.currentUser;
+    response.status(201).json(user);
+    
   } catch (error) {
     console.error(error);
-    response.status(500).json({ error: 'Failed to add data' });
+    response.status(500).render("error", { message: "Failed to fetch chat data" });
   }
 });
-
 
 app.get('/', (request, response) => {
   if(userService.currentUser){
@@ -46,12 +52,13 @@ app.get("/chat", async (request, response) => {
   }
 
   try {
-    const chatData = await firestoreService.getAllData("chatData");
+    
     response.render("chat", {
       title: "Chat",
       user: userService.currentUser,
-      chatData: chatData.data,
+      
     });
+    
   } catch (error) {
     console.error(error);
     response.status(500).render("error", { message: "Failed to fetch chat data" });
@@ -82,31 +89,44 @@ app.get('/register', (request, response) => {
 app.get('/logout', (request, response) => {
   userService.logout().then(() => {
     console.log("Out");
-    response.redirect('/login');
+    response.redirect('/');
   });
 });
 
 app.get('/home', (request, response) => {
   if (userService.currentUser) {
+    const user = userService.currentUser;
     response.render('home', {
       title: 'Home',
-      user: userService.currentUser
+      user: user
     });
-    console.log("YES",userService.currentUser.uid);
+    console.log("YES",userService.currentUser.user['uid']);
   } else {
-    response.redirect('/login');
+    response.redirect('/');
   }
 });
+
+
 
 
 
 app.post("/register", async (req, res) => {
   const uData = req.body;
   try {
-    const user = await userService.addUser(uData.email, uData.pwd);
+    const user = await userService.addUser(uData.first_Name,uData.last_Name,uData.email, uData.pwd);
     res.status(201).json(user);
   } catch (err) {
-    res.status(401).json({ error: err.message });
+   // res.status(401).json({ error: err.message });
+   if (err.code === "auth/weak-password") {
+    console.error("Password is too weak");
+    // Handle weak password error
+} else if (err.code === "auth/email-already-in-use") {
+    console.error("Email is already registered");
+    // Handle email already in use error
+} else {
+    console.error("General error creating or updating user:", err);
+    // Handle other errors
+}
   }
 });
 
@@ -115,14 +135,26 @@ app.post("/login", async (req, res) => {
   try {
     const user = await userService.authenticate(uData.email, uData.pwd);
     userService.currentUser = user;
-    console.log("In");
-    res.redirect("/home");
+    
+    if (user) {
+      res.render('home', {
+        title: 'Home',
+        user: user
+      });
+      console.log("YES",user.user['uid']);
+    } else {
+      res.redirect('/');
+    }
   } catch (err) {
     res.status(401).json({ error: err.message });
   }
 });
 
-const port = process.env.PORT || 3000;
+/*const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`Server started at port ${port}`));
+*/
 
 
+server.listen(3000, () => {
+  console.log("Running!")
+})
