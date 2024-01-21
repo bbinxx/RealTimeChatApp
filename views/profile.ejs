@@ -1,0 +1,41 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Users</title>
+</head>
+<body>
+uid:<%=user.user['uid']%><br>
+Display Name:<%=user.user.providerData[0].displayName%><br>
+
+  <input type="text" id="display_name"  placeholder="Name" required>
+  <button class="" onclick="updateProfile()">Update</button>
+  <br>
+  <a href="/profile/rawData">Raw</a><br>
+  <a href="/profile/updateProfile">/updateProfile</a>
+  <script>
+function updateProfile() {
+  const display_name = document.getElementById('display_name').value;
+  console.log(display_name);
+  fetch('/profile/updateProfile', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ display_name })
+    
+  })
+  .then(() => {
+    // Handle successful data addition
+    document.getElementById('display_name').value = '';
+    console.log('Data sent to server successfully!');
+  })
+  .catch(error => {
+    console.error(error);
+    console.log('Failed to sent data to server');
+  });
+}
+  </script>
+
+</body>
+</html>
