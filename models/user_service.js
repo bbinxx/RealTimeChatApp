@@ -51,10 +51,11 @@ onAuthStateChanged(auth, (user) => {
   }
 
 
-  exports.addUser = (email, password) =>
+  exports.addUser = (first_Name,last_Name,email, password) =>
   createUserWithEmailAndPassword(auth, email, password);
   
 exports.authenticate = (email, password) =>
+
 signInWithEmailAndPassword(auth, email, password);
  // signInWithEmailAndPassword(auth, "bibinraju541@gmail.com", "zzzzzz");
 
