@@ -6,11 +6,12 @@
   <title>Home</title>
 </head>
 <body>
-  <h1>Welcome </h1>
+  <h1>Welcome <%=user.user.providerData[0].displayName%> </h1>
   <p>This is your home page.</p>
-  <a href="/chat">Chat</a>
-  <a href="/logout">logout</a>
-  <button href="/logout">Logout</button>
+  <a href="/chat">Chat</a><br>
+  <a href="/logout">logout</a><br>
+  <a href="/profile">Manage Profile</a><br>
+  
 
   
 </body>
