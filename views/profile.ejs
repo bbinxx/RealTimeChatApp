@@ -2,17 +2,23 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/css/app.css">
   <title>Users</title>
 </head>
 <body>
-uid:<%=user.user['uid']%><br>
+<div class="card">
+  uid:<%=user.user['uid']%><br>
 Display Name:<%=user.user.providerData[0].displayName%><br>
 
   <input type="text" id="display_name"  placeholder="Name" required>
-  <button class="" onclick="updateProfile()">Update</button>
+  <button class="btn" onclick="updateProfile()">Update</button>
   <br>
-  <a href="/profile/rawData">Raw</a><br>
-  <a href="/profile/updateProfile">/updateProfile</a>
+  <a class="btn" href="/profile/rawData">Raw</a><br>
+  <a class="btn" href="/profile/updateProfile">/updateProfile</a>
+</div>
   <script>
 function updateProfile() {
   const display_name = document.getElementById('display_name').value;
