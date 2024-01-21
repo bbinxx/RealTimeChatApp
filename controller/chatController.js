@@ -20,7 +20,7 @@ const userService = require("../models/user_service");
     fdata:async (io)=>{
 
       io.on("connection", async (socket) => {
-        console.log("User connected:"+socket.id);
+       // console.log("User connected:"+socket.id);
         try {
           const chatData = await firestoreService.getAllData("chatData");
           chatData.data.forEach(chatMessage => { 
