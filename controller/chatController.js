@@ -1,22 +1,7 @@
-//socket.js
+// chatController.js
 const firestoreService = require('../models/firestore_services'); // Adjust the path if needed
 const userService = require("../models/user_service");
   module.exports={
-    handleSocketConnections:(io)=>{
-      io.on("connection", (socket) => {
-        socket.on('disconnect', () => {
-          //console.log(socket.id + "-Disconnected");
-        });
-        
-        socket.on('msg', (data) => {
-          firestoreService.addData('chatData', { text: data });
-          io.emit('showmsg', data);
-          io.emit('showmsg', "Hello");
-         // console.log(data);  
-        });
-      });
-
-    },
     fdata:async (io)=>{
 
       io.on("connection", async (socket) => {
