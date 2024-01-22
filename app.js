@@ -3,7 +3,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const userService = require("./models/user_service");
 const firestoreService = require("./models/firestore_services");
-const {handleSocketConnections,fdata} = require('./controller/chatController');
+const {fdata} = require('./controller/chatController');
 const http = require("http");
 const app = express();
 const server = http.createServer(app);
@@ -68,10 +68,14 @@ app.get("/chat", async (request, response) => {
 
 
 app.get('/login', (request, response) => {
-  response.render('login', {
-    title: 'Login',
-    message: 'Welcome to the login page'
-  });
+  if(userService.currentUser){
+    return response.redirect('/home')
+  }else{
+    response.render('login', {
+      title: 'Login',
+      message: 'Welcome to the login page'
+    });
+  }
   
 });
 
