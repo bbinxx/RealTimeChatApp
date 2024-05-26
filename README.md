@@ -7,12 +7,12 @@ Note:Lots of bugs exits . Still developing
 
 1. Clone the repository:
     ```sh
-    git clone https://github.com/yourusername/chat-application.git
+    git clone https://github.com/bbinxx/RealTimeChatApp.git
     ```
 
 2. Navigate to the project directory:
     ```sh
-    cd chat-application
+    cd RealTimeChatApp
     ```
 
 3. Install dependencies:
