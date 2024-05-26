@@ -51,5 +51,6 @@ chat-application/
 │   ├── login.ejs
 │   └── reg.ejs
 ├── app.js
+├── .env
 ├── package.json
 └── README.md
