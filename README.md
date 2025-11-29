@@ -1,7 +1,7 @@
 # Chat Application
 
 A real-time chat application built using Node.js, Express, and Socket.IO.
-Note:Lots of bugs exits . Still developing
+Note:Lots of bugs exists . Still developing
 
 ## Installation
 
@@ -54,3 +54,4 @@ chat-application/
 ├── .env
 ├── package.json
 └── README.md
+
