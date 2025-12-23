@@ -1,10 +1,11 @@
 {
-  "name": "firebase_auth_crud",
+  "name": "RealTimeChatApp",
   "version": "1.0.0",
   "description": "",
   "main": "app.js",
   "scripts": {
-    "start":"node app.js",
+    "start": "node app.js",
+    "dev": "nodemon app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -14,6 +15,7 @@
     "dotenv": "^16.3.1",
     "ejs": "^3.1.9",
     "express": "^4.18.2",
+    "express-session": "^1.18.1",
     "firebase": "^10.7.1",
     "socket.io": "^4.7.4"
   },

@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -10,8 +9,12 @@
 </head>
 <body>
 <div class="card">
-  uid:<%=user.user['uid']%><br>
-Display Name:<%=user.user.providerData[0].displayName%><br>
+  <% if (user && user.user) { %>
+    uid:<%=user.user['uid']%><br>
+    Display Name:<%=user.user.providerData[0].displayName%><br>
+  <% } else { %>
+    <p>User data is not available.</p>
+  <% } %>
 
   <input type="text" id="display_name"  placeholder="Name" required>
   <button class="btn" onclick="updateProfile()">Update</button>

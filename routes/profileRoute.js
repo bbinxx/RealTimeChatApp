@@ -12,9 +12,10 @@ router.post('/', profileControllers.createProfile);
 router.post('/updateProfile', profileControllers.updateUserDetails);
 router.delete('/', profileControllers.deleteProfile);
 router.get('/profile', (request, response) => {
-    if(!userService.currentUser){
-        response.redirect('/');
-    }
-})
+  if (!userService.currentUser()) {
+    response.redirect('/');
+  }
+});
+
 // Export the router object for use in the main application file
 module.exports = router;

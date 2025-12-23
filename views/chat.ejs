@@ -40,18 +40,13 @@
         let uid = "<%=user.user.uid%>";
         //console.log(displayName);
         //console.log(uid);
-
-
         msg.innerHTML = data.userName + ": " + data.data;
         if(data.uid==uid){
             msg.className += "msg-se";
             
         }else{
             msg.className += "msg-re";
-
         }
-
-        
         chat.append(msg);
         chat.scrollTop = msg.offsetHeight + msg.offsetTop;
     });

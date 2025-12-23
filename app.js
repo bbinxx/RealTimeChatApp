@@ -9,36 +9,39 @@ const app = express();
 const server = http.createServer(app);
 const io = require('socket.io')(server, { allowEIO3: true });
 const profileRoute = require('./routes/profileRoute');
-
+const session = require('express-session');
+//
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-
+//
 app.set('view engine', 'ejs');
 app.set('views', __dirname + '/views');
 app.use(express.static( __dirname + '/public'));
 
+app.use(session({
+  secret: 'your_secret_key',
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: false } // Set to true if using HTTPS
+}));
+
 //handleSocketConnections(io);
 fdata(io);
-
 app.use('/profile',profileRoute);
-
 app.get("/profile/rawData", async (request, response) => {
-  if (!userService.currentUser) {
+  if (!request.session.user) {
     return response.redirect("/");
   }
-
   try {
-    const user =userService.currentUser;
+    const user = request.session.user;
     response.status(201).json(user);
-    
   } catch (error) {
     console.error(error);
     response.status(500).render("error", { message: "Failed to fetch chat data" });
   }
 });
-
 app.get('/', (request, response) => {
-  if(userService.currentUser){
+  if(request.session.user){
     console.log("Yes");
     response.redirect('/home');
   }
@@ -48,7 +51,7 @@ app.get('/', (request, response) => {
   });
 });
 app.get("/chat", async (request, response) => {
-  if (!userService.currentUser) {
+  if (!request.session.user) {
     return response.redirect("/");
   }
 
@@ -56,7 +59,7 @@ app.get("/chat", async (request, response) => {
     
     response.render("chat", {
       title: "Chat",
-      user: userService.currentUser,
+      user: request.session.user,
       
     });
     
@@ -65,18 +68,15 @@ app.get("/chat", async (request, response) => {
     response.status(500).render("error", { message: "Failed to fetch chat data" });
   }
 });
-
-
 app.get('/login', (request, response) => {
-  if(userService.currentUser){
-    return response.redirect('/home')
-  }else{
+  if (request.session.user) {
+    return response.redirect('/home');
+  } else {
     response.render('login', {
       title: 'Login',
       message: 'Welcome to the login page'
     });
   }
-  
 });
 
 app.get('/register', (request, response) => {
@@ -92,28 +92,27 @@ app.get('/register', (request, response) => {
 });
 
 app.get('/logout', (request, response) => {
-  userService.logout().then(() => {
+  request.session.destroy(err => {
+    if (err) {
+      return console.error(err);
+    }
     console.log("Out");
     response.redirect('/');
   });
 });
 
 app.get('/home', (request, response) => {
-  if (userService.currentUser) {
-    const user = userService.currentUser;
+  if (request.session.user) {
+    const user = request.session.user;
     response.render('home', {
       title: 'Home',
       user: user
     });
-    console.log("YES",userService.currentUser.user['uid']);
+    console.log("YES", user.user['uid']);
   } else {
     response.redirect('/');
   }
 });
-
-
-
-
 
 app.post("/register", async (req, res) => {
   const uData = req.body;
@@ -139,14 +138,14 @@ app.post("/login", async (req, res) => {
   const uData = req.body;
   try {
     const user = await userService.authenticate(uData.email, uData.pwd);
-    userService.currentUser = user;
+    req.session.user = user;
     
     if (user) {
       res.render('home', {
         title: 'Home',
         user: user
       });
-      console.log("YES",user.user['uid']);
+      console.log("YES", user.user['uid']);
     } else {
       res.redirect('/');
     }
