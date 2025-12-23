@@ -53,14 +53,14 @@
 
     function send() {
         var msgField = document.getElementById("msg");
-        //var usernameField = document.getElementById("username");
-
         var msg = msgField.value;
-        //var username = usernameField.value;
+        let displayName = "<%=user.user.providerData[0].displayName%>";
+        let uid = "<%=user.user.uid%>";
 
-        socket.emit('msg', { msg: msg });
-        msgField.value = '';
-
+        if (msg.trim() !== '') {
+            socket.emit('msg', { msg: msg, uid: uid, userName: displayName });
+            msgField.value = '';
+        }
     }
 
     window.addEventListener('keydown', function (e) {
