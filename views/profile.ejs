@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -7,44 +8,51 @@
   <link rel="stylesheet" href="/css/app.css">
   <title>Users</title>
 </head>
-<body>
-<div class="card">
-  <% if (user && user.user) { %>
-    uid:<%=user.user['uid']%><br>
-    Display Name:<%=user.user.providerData[0].displayName%><br>
-  <% } else { %>
-    <p>User data is not available.</p>
-  <% } %>
 
-  <input type="text" id="display_name"  placeholder="Name" required>
-  <button class="btn" onclick="updateProfile()">Update</button>
-  <br>
-  <a class="btn" href="/profile/rawData">Raw</a><br>
-  <a class="btn" href="/profile/updateProfile">/updateProfile</a>
-</div>
+<body>
+  <div class="card">
+    <% if (user && user.user) { %>
+      uid:<%=user.user['uid']%><br>
+        Display Name:<%=user.user.providerData[0].displayName%><br>
+          <% } else { %>
+            <p>User data is not available.</p>
+            <% } %>
+
+              <input type="text" id="display_name" placeholder="Name" required>
+              <button class="btn" onclick="updateProfile()">Update</button>
+              <br>
+              <a class="btn" href="/profile/rawData">Raw</a><br>
+              <a class="btn" href="/profile/updateProfile">/updateProfile</a>
+  </div>
   <script>
-function updateProfile() {
-  const display_name = document.getElementById('display_name').value;
-  console.log(display_name);
-  fetch('/profile/updateProfile', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ display_name })
-    
-  })
-  .then(() => {
-    // Handle successful data addition
-    document.getElementById('display_name').value = '';
-    console.log('Data sent to server successfully!');
-  })
-  .catch(error => {
-    console.error(error);
-    console.log('Failed to sent data to server');
-  });
-}
+    function updateProfile() {
+      const display_name = document.getElementById('display_name').value;
+      console.log(display_name);
+      fetch('/profile/updateProfile', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ display_name })
+
+      })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            alert('Profile updated successfully!');
+            window.location.href = '/home';
+          } else {
+            alert('Failed to update profile: ' + (data.error || 'Unknown error'));
+            console.error(data.error);
+          }
+        })
+        .catch(error => {
+          console.error(error);
+          alert('Network error occurred');
+        });
+    }
   </script>
 
 </body>
+
 </html>
