@@ -1,24 +1,31 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="/css/app.css">
   <title>Chat-io</title>
-  
+
 <body>
   <div class="reg_view">
-  <form action="/register" method="post" class="form">
-    <div class="title">Welcome,<br><span>Sign up continue</span></div>
-    <input type="text" id="first_Name" placeholder="First Name" name="First_Name"><br>
-    <input type="text" id="last_Name" placeholder="Second Name" name="Last_Name"><br>
-    <input type="email" id="email" placeholder="Email" name="email"><br><br>
-    <input type="password" id="pwd" placeholder="Password" name="pwd"><br><br>
+    <form action="/register" method="post" class="form">
+      <div class="title">Welcome,<br><span>Sign up continue</span></div>
+      <% if (locals.message) { %>
+        <div style="color: red; margin-bottom: 10px;">
+          <%= message %>
+        </div>
+        <% } %>
+          <input type="text" id="first_Name" placeholder="First Name" name="First_Name"><br>
+          <input type="text" id="last_Name" placeholder="Second Name" name="Last_Name"><br>
+          <input type="email" id="email" placeholder="Email" name="email"><br><br>
+          <input type="password" id="pwd" placeholder="Password" name="pwd"><br><br>
 
-    <button type="submit" class="btn-confirm" value="Submit">Sign Up</button>
-  </form>
+          <button type="submit" class="btn-confirm" value="Submit">Sign Up</button>
+    </form>
 
-</div>
+  </div>
 </body>
+
 </html>
